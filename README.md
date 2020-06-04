@@ -1,4 +1,4 @@
-#Social Media Project
+# Social Media Project
 
 I am creating this project with the intention of learning how to create a full stack application. Through building this app I hope to gain knowlege on setting up login systems, databases, and backend programming.
 
