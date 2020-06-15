@@ -1,34 +1,59 @@
 import React from 'react';
-import Login from './components/login.js';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Heading from './components/heading.js';
 import LoginModal from './components/loginModal.js';
+import Home from './components/home.js';
+import Welcome from './components/welcome.js';
 import './App.css';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modal: false
-    };
-    this.toggleModal = this.toggleModal.bind(this);
+  state = {
+    Authenticated: false,
+    emailVerified: false,
+    uid: null,
+    user: null
+  };
+
+  setAuthentication = authenticated => {
+    this.setState({ Authenticated: authenticated });
   }
 
-  toggleModal() {
-    this.setState({
-      modal: true
-    })
+  setEmailVerification = verified => {
+    this.setState({ emailVerified: verified });
+  }
+
+  setUid = uid => {
+    this.setState({ uid: uid});
+  }
+
+  setUser = user => {
+    this.setState({ user: user });
   }
 
   render() {
+    const ActiveUser = {
+      Authenticated: this.state.Authenticated,
+      emailVerified: this.state.emailVerified,  
+      uid: this.state.uid,    
+      user: this.state.user,
+      setAuthentication: this.setAuthentication,
+      setEmailVerification: this.setEmailVerification,
+      setUid: this.setUid,
+      setUser: this.setUser
+    };
+
     return (
       <div className="App">
-        <header className="App-header">
-          <p>Tyler's Social Media Project</p>
-          <Login toggleModal={this.toggleModal}/>
-        </header>
-        <div className="App-content">
-
-        </div>
-        {this.state.modal ? <LoginModal /> : null}
+        <Router>
+          <div>
+            <Heading ActiveUser={ActiveUser} />
+            <Switch>
+              <Route exact path="/" render={(props) => <Home {...props} ActiveUser={ActiveUser} />} />
+              <Route exact path="/login" render={(props) => <LoginModal {...props} ActiveUser={ActiveUser} />} />
+              <Route exact path="/welcome" render={() => <Welcome ActiveUser={ActiveUser} />} />
+            </Switch>
+          </div>
+        </Router>
       </div>
     );
   }
