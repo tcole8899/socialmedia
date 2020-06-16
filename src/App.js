@@ -4,7 +4,9 @@ import Heading from './components/heading.js';
 import LoginModal from './components/loginModal.js';
 import Home from './components/home.js';
 import Welcome from './components/welcome.js';
+import Profile from './components/profile.js';
 import './App.css';
+import Firebase from './Config/Firebase.js';
 
 class App extends React.Component {
   state = {
@@ -13,6 +15,22 @@ class App extends React.Component {
     uid: null,
     user: null
   };
+
+  componentDidMount() {
+    Firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user);
+        this.setState({ 
+          Authenticated: true,
+          emailVerified: user.emailVerified,
+          uid:  user.uid,
+          user: user.displayName
+        });
+      } else {
+        this.setState({ Authenticated: false });
+      }
+    });
+  }
 
   setAuthentication = authenticated => {
     this.setState({ Authenticated: authenticated });
@@ -51,6 +69,7 @@ class App extends React.Component {
               <Route exact path="/" render={(props) => <Home {...props} ActiveUser={ActiveUser} />} />
               <Route exact path="/login" render={(props) => <LoginModal {...props} ActiveUser={ActiveUser} />} />
               <Route exact path="/welcome" render={() => <Welcome ActiveUser={ActiveUser} />} />
+              <Route exact path="/profile" render={(props) => <Profile {...props} ActiveUser={ActiveUser} />} />
             </Switch>
           </div>
         </Router>
