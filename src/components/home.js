@@ -17,11 +17,22 @@ class Home extends React.Component {
 
     sendPost = async event => {
         event.preventDefault();
-        const { post } = this.state;
+        const post = {
+            author: this.props.ActiveUser.user,
+            authorId: this.props.ActiveUser.uid,
+            text: this.state.post,
+            likes: 0
+        }
 
-        Firebase.database().ref('users/' + this.props.ActiveUser.uid + '/posts').set({
-            post: post
-        });
+        try {
+            var newPostKey = Firebase.database().ref().child('users/' + this.props.ActiveUser.uid + '/posts').push().key;
+
+            var updates = {};
+            updates['users/' + this.props.ActiveUser.uid + '/posts/' + newPostKey] = post;
+            Firebase.database().ref().update(updates);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     renderNoUser() {
@@ -36,7 +47,7 @@ class Home extends React.Component {
     renderUser() {
         return (
             <div className="Content">
-                <textarea className="Post" placeholder="Enter Text Here" id="post" onChange={this.onInputChange} />
+                <textarea className="Post-input" placeholder="Enter Text Here" id="post" onChange={this.onInputChange} />
                 <button onClick={this.sendPost}>Send</button>
             </div>
         );

@@ -24,6 +24,13 @@
   margin-left: auto;
 }
 
+.App-header > .AuthNav {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+  margin: auto;
+}
+
 .Nav-button{
   background-color: rgb(116, 116, 116);
   color: white;
@@ -111,6 +118,7 @@
 
 .Content {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
   height: stretch;
   background-color: #282c34;
@@ -120,7 +128,15 @@
   padding-right: 15%;
 }
 
-.Post {
+.Content-input {
+  display: flex;
+}
+
+.Content-posts {
+  height: stretch;
+}
+
+.Post-input {
   width: stretch;
   height: 20px;
   resize: none;
@@ -134,3 +150,27 @@
 .Content > button {
   height: 25px;
 }
+
+.Content > table {
+  width: stretch;
+}
+
+.Post {
+  background-color: white;
+  width: stretch;
+  height: fit-content;
+  display: flex;
+  align-items: stretch;
+  border: 3px solid #282c34;
+}
+
+.Post-author {
+  outline: black;
+  border-right: 1px solid black;
+  padding: 10px;
+}
+
+.Post-text {
+  padding: 10px;
+}
+
