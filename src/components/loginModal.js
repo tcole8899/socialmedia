@@ -79,16 +79,6 @@ class LoginModal extends React.Component {
         }
     }
 
-    handleLogOut = async event => {
-        event.preventDefault();
-        try {
-            await Firebase.auth().signOut();
-        }
-        catch (error) {
-            console.log('error signing out: ', error)
-        }
-    }
-
     renderSignUp() {
         return (
             <div className="Form-Content">
