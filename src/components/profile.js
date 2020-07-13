@@ -37,6 +37,7 @@ class Profile extends React.Component {
 
             var updates = {};
             updates['users/' + this.props.ActiveUser.uid + '/posts/' + newPostKey] = post;
+            updates['userPosts/' + newPostKey] = post;
             Firebase.database().ref().update(updates);
             this.readProfile();
         } catch (error) {
@@ -45,7 +46,7 @@ class Profile extends React.Component {
     }
 
     readProfile() {
-        const postQuery = Firebase.database().ref('users/' + this.props.ActiveUser.uid + '/posts');
+        const postQuery = Firebase.database().ref('users/' + this.props.ActiveUser.uid + '/posts').orderByKey();
 
         postQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
@@ -69,10 +70,9 @@ class Profile extends React.Component {
                 </div>
                 <div className="Content-posts">
                     {display !== null ? 
-                            Object.keys(display).map((key, index) => {
+                            Object.keys(display).reverse().map((key, index) => {
                                 let post = display[key];
-                                console.log(post);
-                                return <Post key={key} author={post.author} text={post.text} />
+                                return <Post key={key} post={true} author={post.author} text={post.text} />
                             })
                     : null}
                 </div>

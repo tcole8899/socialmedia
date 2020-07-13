@@ -5,6 +5,7 @@ import LoginModal from './components/loginModal.js';
 import Home from './components/home.js';
 import Welcome from './components/welcome.js';
 import Profile from './components/profile.js';
+import Search from './components/search.js';
 import './App.css';
 import Firebase from './Config/Firebase.js';
 
@@ -70,6 +71,7 @@ class App extends React.Component {
               <Route exact path="/login" render={(props) => <LoginModal {...props} ActiveUser={ActiveUser} />} />
               <Route exact path="/welcome" render={() => <Welcome ActiveUser={ActiveUser} />} />
               <Route exact path="/profile" render={(props) => <Profile {...props} ActiveUser={ActiveUser} />} />
+              <Route exact path="/search" render={(props) => <Search {...props} ActiveUser={ActiveUser} />} />
             </Switch>
           </div>
         </Router>

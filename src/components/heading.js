@@ -31,6 +31,7 @@ class Heading extends React.Component {
                     this.props.ActiveUser.Authenticated && user ?
                         <div className="AuthNav">
                             <a href="/" className="Nav-button">Feed</a>
+                            <a href='/search' className="Nav-button">Search</a>
                             <a href='/profile' className="Nav-button">Profile</a>
                         </div>
                         : null
