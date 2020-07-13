@@ -1,5 +1,5 @@
 import React from 'react';
-import { Auth } from 'aws-amplify';
+import Firebase from '../Config/Firebase.js';
 
 class LoginModal extends React.Component {
     constructor(props) {
@@ -9,14 +9,16 @@ class LoginModal extends React.Component {
             username: "",
             email: "",
             password: "",
-            confirmpassword: ""
+            confirmpassword: "",
+            error: ""
         };
         this.toggleSignUp = this.toggleSignUp.bind(this);
     }
 
     toggleSignUp() {
         this.setState({
-            login: !this.state.login
+            login: !this.state.login,
+            error: ""
         })
     }
 
@@ -28,34 +30,59 @@ class LoginModal extends React.Component {
 
     handleSignUp = async event => {
         event.preventDefault();
-        const { username, email, password } = this.state;
+        const {username, email, password } = this.state;
         try {
-            const signUpResponse = await Auth.signUp({
-                username,
-                password,
-                attributes: {
-                    email: email
-                }
+            const SignUpResponse = await Firebase.auth().createUserWithEmailAndPassword(email, password);
+            console.log(SignUpResponse);
+
+            Firebase.database().ref('users/' + SignUpResponse.user.uid).set({
+                username: username,
+                email: email
             });
-            console.log(signUpResponse);
+
+            var user = Firebase.auth().currentUser;
+            user.updateProfile({
+                displayName: username
+            }).then(function() {
+                console.log('display name added');
+            }).catch(function(error) {
+                console.log(error);
+            })
+
+            user.sendEmailVerification().then(function() {
+                console.log("Email sent");
+              }).catch(function(error) {
+                console.log(error);
+              });
+
+            this.props.history.push("/welcome");
+
         } catch (error) {
             console.log(error);
+            this.setState({error: error.message});
         }
     }
 
     handleLogIn = async event => {
         event.preventDefault();
         try {
-            const user = await Auth.signIn(this.state.username, this.state.password);
+            const user = await Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
             console.log(user);
+            this.props.ActiveUser.setAuthentication(true);
+            this.props.ActiveUser.setUser(user.user.displayName);
+            this.props.ActiveUser.setEmailVerification(user.user.emailVerified);
+            this.props.ActiveUser.setUid(user.user.uid);
+            this.props.history.push("/");
         } catch (error) {
             console.log('error signing in: ', error);
+            this.setState({error: error.message});
         }
     }
 
     handleLogOut = async event => {
+        event.preventDefault();
         try {
-            await Auth.signOut();
+            await Firebase.auth().signOut();
         }
         catch (error) {
             console.log('error signing out: ', error)
@@ -66,6 +93,7 @@ class LoginModal extends React.Component {
         return (
             <div className="Form-Content">
                 <h1>Sign Up</h1>
+                {this.state.error !== "" ? <p className="Error">Error signing in: {this.state.error}</p> : null}
                 <label htmlFor="Username"><b>Username</b></label>
                 <input type="text" placeholder='Username' name="Username" id="username" onChange={this.onInputChange} />
                 <label htmlFor="Email"><b>Email</b></label>
@@ -85,8 +113,9 @@ class LoginModal extends React.Component {
             <div className="Form-Content">
                 <h1>Log In</h1>
                 <p>Welcome Back!</p>
-                <label htmlFor="Username"><b>Username</b></label>
-                <input type="text" placeholder='Username' name="Username" id="username" onChange={this.onInputChange} />
+                {this.state.error !== "" ? <p className="Error">Error signing in: {this.state.error}</p> : null}
+                <label htmlFor="Email"><b>Email</b></label>
+                <input type="text" placeholder='Email' name="Email" id="email" onChange={this.onInputChange} />
                 <label htmlFor="Password"><b>Password</b></label>
                 <input type="password" placeholder='Password' name="Password" id="password" onChange={this.onInputChange} />
                 <button className="Form-Submit" onClick={this.handleLogIn}>Log In</button>

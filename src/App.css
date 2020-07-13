@@ -4,13 +4,46 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 25vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   font-size: calc(10px + 2vmin);
   color: white;
+  border-bottom: 1px solid white;
+}
+
+.App-header > .Title {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+}
+
+.App-header > .Navigation {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+  margin-left: auto;
+}
+
+.App-header > .AuthNav {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+  margin: auto;
+}
+
+.Nav-button{
+  background-color: rgb(116, 116, 116);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 20px;
+  max-height: 30px;
+  margin: auto;
+}
+
+.Nav-button:hover {
+  background-color: rgb(172, 170, 170);
 }
 
 .App-content{
@@ -78,3 +111,66 @@
   cursor: pointer;
   background-color: rgb(105, 187, 101);
 }
+
+.Error {
+  color: red;
+}
+
+.Content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: stretch;
+  background-color: #282c34;
+  margin: auto;
+  padding: 10px;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.Content-input {
+  display: flex;
+}
+
+.Content-posts {
+  height: stretch;
+}
+
+.Post-input {
+  width: stretch;
+  height: 20px;
+  resize: none;
+}
+
+.Post:focus-within {
+  resize: vertical;
+  height: 150px;
+}
+
+.Content > button {
+  height: 25px;
+}
+
+.Content > table {
+  width: stretch;
+}
+
+.Post {
+  background-color: white;
+  width: stretch;
+  height: fit-content;
+  display: flex;
+  align-items: stretch;
+  border: 3px solid #282c34;
+}
+
+.Post-author {
+  outline: black;
+  border-right: 1px solid black;
+  padding: 10px;
+}
+
+.Post-text {
+  padding: 10px;
+}
+
