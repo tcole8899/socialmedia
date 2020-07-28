@@ -26,9 +26,9 @@ class Search extends React.Component {
 
         userQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-            let fullData = { ...data };
+            //let fullData = { ...data };
             this.setState({
-                display: fullData,
+                display: data,
                 profile: false
             })
         })
@@ -67,7 +67,15 @@ class Search extends React.Component {
                             return Object.keys(user.posts).map((keyP, indexP) => {
                                 let post = user.posts[keyP];
                                 console.log(post);
-                                return <Post key={keyP} post={true} author={post.author} text={post.text} />
+                                return (<Post 
+                                        key={keyP} 
+                                        likes={post.likes} 
+                                        FollowUid={post.authorId} 
+                                        date={post.date} 
+                                        postKey={keyP}
+                                        post={true} 
+                                        author={post.author} 
+                                        text={post.text} />)
                             })
                         })
                         : null}

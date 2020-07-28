@@ -134,6 +134,7 @@
 
 .Content-posts {
   height: stretch;
+  overflow-y: scroll;
 }
 
 .Post-input {
@@ -168,11 +169,17 @@
   outline: black;
   border-right: 1px solid black;
   padding: 10px;
-  width: 8%;
+  width: 15%;
 }
 
 .Post-text {
   padding: 10px;
+}
+
+.Post-like {
+  display: flex;
+  margin: 0 auto;
+  padding-left: 30%;
 }
 
 .Search {

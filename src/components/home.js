@@ -26,11 +26,14 @@ class Home extends React.Component {
 
     sendPost = async event => {
         event.preventDefault();
+
+        var postDate = new Date().toLocaleString();
         const post = {
             author: this.props.ActiveUser.user,
             authorId: this.props.ActiveUser.uid,
             text: this.state.post,
-            likes: 0
+            likes: 0,
+            date: postDate
         }
 
         try {
@@ -38,7 +41,9 @@ class Home extends React.Component {
 
             var updates = {};
             updates['users/' + this.props.ActiveUser.uid + '/posts/' + newPostKey] = post;
+            updates['userPosts/' + newPostKey] = post;
             Firebase.database().ref().update(updates);
+            this.getData();
         } catch (error) {
             console.log(error);
         }
@@ -55,6 +60,8 @@ class Home extends React.Component {
                 var key = childSnapshot.key;
                 following.push(key);
             })
+            following.push(this.props.ActiveUser.user);
+            
             this.setState({
                 following: following
             })
@@ -64,9 +71,10 @@ class Home extends React.Component {
 
         feedQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-            let fullData = { ...data };
+            console.log(data);
+            //let fullData = { ...data };
             this.setState({
-                display: fullData
+                display: data
             })
         })
 
@@ -96,7 +104,18 @@ class Home extends React.Component {
                             Object.keys(display).reverse().map((key, index) => {
                                 let post = display[key];
                                 if(following.includes(post.author)){
-                                    return <Post key={key} post={true} author={post.author} text={post.text} />
+                                    return (<Post 
+                                            key={key} 
+                                            likes={post.likes} 
+                                            FollowUid={post.authorId} 
+                                            date={post.date} 
+                                            postKey={key} 
+                                            post={true} 
+                                            author={post.author} 
+                                            text={post.text} />)
+                                }
+                                else {
+                                    return null;
                                 }
                             })
                     : null}
