@@ -25,11 +25,14 @@ class Profile extends React.Component {
 
     sendPost = async event => {
         event.preventDefault();
+
+        var postDate = new Date().toLocaleString();
         const post = {
             author: this.props.ActiveUser.user,
             authorId: this.props.ActiveUser.uid,
             text: this.state.post,
-            likes: 0
+            likes: 0,
+            date: postDate
         }
 
         try {
@@ -50,18 +53,18 @@ class Profile extends React.Component {
 
         postQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-            let fullData = {...data};
+          //  let fullData = {...data};
             this.setState({
-                display: fullData
+                display: data
             })
         })
     }
 
     render() {
         var display = this.state.display;
-        if(display !== null){
-            console.log(display);
-        }
+        // if(display !== null){
+        //     console.log(display);
+        // }
         return (
             <div className="Content">
                 <div className="Content-input">
@@ -72,8 +75,16 @@ class Profile extends React.Component {
                     {display !== null ? 
                             Object.keys(display).reverse().map((key, index) => {
                                 let post = display[key];
-                                return <Post key={key} post={true} author={post.author} text={post.text} />
-                            })
+                                return (<Post 
+                                    key={key} 
+                                    likes={post.likes} 
+                                    FollowUid={post.authorId} 
+                                    date={post.date} 
+                                    postKey={key} 
+                                    post={true} 
+                                    author={post.author} 
+                                    text={post.text} />)
+                                })
                     : null}
                 </div>
             </div>

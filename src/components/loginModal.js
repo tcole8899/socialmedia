@@ -6,6 +6,7 @@ class LoginModal extends React.Component {
         super(props);
         this.state = {
             login: true,
+            fullname: "",
             username: "",
             email: "",
             password: "",
@@ -30,12 +31,16 @@ class LoginModal extends React.Component {
 
     handleSignUp = async event => {
         event.preventDefault();
-        const {username, email, password } = this.state;
+        const {fullname, username, email, password, confirmpassword } = this.state;
         try {
+            if (password !== confirmpassword){
+             throw new Error({message: "Passwords do not match"});
+            }
             const SignUpResponse = await Firebase.auth().createUserWithEmailAndPassword(email, password);
             console.log(SignUpResponse);
 
             Firebase.database().ref('users/' + SignUpResponse.user.uid).set({
+                fullname: fullname,
                 username: username,
                 email: email
             });
@@ -83,7 +88,9 @@ class LoginModal extends React.Component {
         return (
             <div className="Form-Content">
                 <h1>Sign Up</h1>
-                {this.state.error !== "" ? <p className="Error">Error signing in: {this.state.error}</p> : null}
+                {this.state.error !== "" ? <p className="Error">Error signing up: {this.state.error}</p> : null}
+                <label htmlFor="Fullname"><b>Full Name</b></label>
+                <input type="text" placeholder='Fullname' name="Fullname" id="fullname" onChange={this.onInputChange} />
                 <label htmlFor="Username"><b>Username</b></label>
                 <input type="text" placeholder='Username' name="Username" id="username" onChange={this.onInputChange} />
                 <label htmlFor="Email"><b>Email</b></label>
