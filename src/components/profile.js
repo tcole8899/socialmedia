@@ -76,8 +76,7 @@ class Profile extends React.Component {
                             Object.keys(display).reverse().map((key, index) => {
                                 let post = display[key];
                                 return (<Post 
-                                    key={key} 
-                                    likes={post.likes} 
+                                    key={key}  
                                     FollowUid={post.authorId} 
                                     date={post.date} 
                                     postKey={key} 

@@ -1,4 +1,5 @@
 import React from 'react';
+import Comments from './comments.js'
 import Firebase from '../Config/Firebase.js';
 
 class Post extends React.Component {
@@ -8,17 +9,27 @@ class Post extends React.Component {
             post: true,
             likes: null,
             followed: false,
-            liked: false
+            liked: false,
+            comment: false,
+            commentModal: false
         }
+        this.toggleComments = this.toggleComments.bind(this);
         this.followUser = this.followUser.bind(this);
         this.likePost = this.likePost.bind(this);
     }
 
     componentDidMount() {
         this.setState({
-            post: this.props.post
+            post: this.props.post,
+            comment: this.props.comment
         })
         this.likeStatus();
+    }
+
+    toggleComments() {
+        this.setState({
+            commentModal: !this.state.commentModal
+        })
     }
 
     likeStatus() {
@@ -34,6 +45,14 @@ class Post extends React.Component {
 
             status = status ? data[user.displayName] : status;
             this.setState({ liked: status });
+        })
+
+        var likeQuery = Firebase.database().ref('userPosts/' + postKey + '/likes');
+
+        likeQuery.once('value', snapshot => {
+            let data = snapshot.val() ? snapshot.val() : 0;
+            console.log(data);
+            this.setState({ likes: data});
         })
     }
 
@@ -58,20 +77,22 @@ class Post extends React.Component {
         const postKey = this.props.postKey;
         const likeUid = this.props.FollowUid;
         const user = Firebase.auth().currentUser;
-        var liked = this.state.liked;
+        var {liked, likes} = this.state;
+        var newLikeCount = liked ?  likes - 1 : likes + 1;
+        console.log(likes);
 
         console.log()
 
         var userLikeQuery = Firebase.database().ref('users/' + likeUid + '/posts/' + postKey + '/likes');
         var postLikeQuery = Firebase.database().ref('userPosts/' + postKey + '/likes');
 
-        userLikeQuery.transaction(function (likes) {
+        userLikeQuery.transaction(function (likeCount) {
 
-            return liked ? likes - 1 : likes + 1;
+            return liked ? likeCount - 1 : likeCount + 1;
         })
 
-        postLikeQuery.transaction(function (likes) {
-            return liked ? likes - 1 : likes + 1;
+        postLikeQuery.transaction(function (likeCount) {
+            return liked ? likeCount - 1 : likeCount + 1;
         })
 
         var updates = {};
@@ -79,11 +100,15 @@ class Post extends React.Component {
         updates['userPosts/' + postKey + '/likers/' + user.displayName] = liked ? false : true;
 
         Firebase.database().ref().update(updates);
-        this.likeStatus();
+        
+        this.setState({
+            liked: !liked,
+            likes: newLikeCount
+        })
     }
 
     renderPost() {
-        var liked = this.state.liked;
+        var {liked, comment} = this.state;
         var text = liked ? "Unlike" : "Like";
         return (
             <div className="Post">
@@ -91,12 +116,15 @@ class Post extends React.Component {
                     <h5>@{this.props.author}</h5>
                     <div>
                         <div className="Post-like">
-                            <p>{this.props.likes}</p>
+                            <p>{this.state.likes}</p>
                             <button onClick={this.likePost}>{text}</button>
                         </div>
-                        <div>
-                            <button>Comment</button>
-                        </div>
+                        {comment ? null :
+                            (<div>
+                                <button onClick={this.toggleComments}>Comment</button>
+                            </div>
+                            )
+                        }
                     </div>
                 </div>
                 <div className="Post-text">
@@ -108,11 +136,28 @@ class Post extends React.Component {
         )
     }
 
+    renderComments() {
+        const followUid = this.props.FollowUid;
+        return (
+            <div>
+                <Comments
+                    postId={this.props.postKey} 
+                    toggleComments={this.toggleComments}
+                    author={this.props.author}
+                    text={this.props.text}
+                    date={this.props.date}
+                    authorUid={followUid}
+                />
+            </div>
+        )
+
+    }
+
     renderSearch() {
         return (
             <div className="Post">
                 <div className="Post-author">
-                    <button onClick={this.props.renderProfile}>@{this.props.author}</button>
+                    <button onClick={this.props.renderProfile} value={this.props.author}>@{this.props.author}</button>
                 </div>
                 <div className="Post-follow">
                     {this.state.follow ? <button>Unfollow</button> : <button onClick={this.followUser}>Follow</button>}
@@ -122,10 +167,11 @@ class Post extends React.Component {
     }
 
     render() {
-        const post = this.state.post;
+        const {post, commentModal} = this.state;
         return (
             <div>
                 {post ? this.renderPost() : this.renderSearch()}
+                {commentModal ? this.renderComments() : null}
             </div>
         );
     }

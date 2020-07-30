@@ -106,7 +106,6 @@ class Home extends React.Component {
                                 if(following.includes(post.author)){
                                     return (<Post 
                                             key={key} 
-                                            likes={post.likes} 
                                             FollowUid={post.authorId} 
                                             date={post.date} 
                                             postKey={key} 

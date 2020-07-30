@@ -139,13 +139,8 @@
 
 .Post-input {
   width: stretch;
-  height: 20px;
+  min-height: 20px;
   resize: none;
-}
-
-.Post-input:focus {
-  resize: vertical;
-  height: 150px;
 }
 
 .Content > button {
