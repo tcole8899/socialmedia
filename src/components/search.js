@@ -7,42 +7,61 @@ class Search extends React.Component {
         super(props);
         this.state = {
             search: null,
+            usernamesArr: null,
+            usernamesObj: null,
+            displayUsers: null,
             display: null,
             profile: false
         }
         this.onSubmit = this.onSubmit.bind(this);
-        this.renderProfile = this.renderProfile.bind(this);
+      //  this.renderProfile = this.renderProfile.bind(this);
     }
 
-    onInputChange = event => {
-        this.setState({
-            search: event.target.value
-        })
-    }
-
-    onSubmit() {
-        const search = this.state.search;
-        const userQuery = Firebase.database().ref('users/').orderByChild('username/').equalTo(search);
+    componentDidMount() {
+        const userQuery = Firebase.database().ref('usernames/');
 
         userQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
+            this.setState({
+                usernamesArr: Object.keys(data),
+                usernamesObj: data
+            })
+        })
+
+    }
+
+    onInputChange = event => {
+        const usernamesArr = this.state.usernamesArr;
+        let displayUsers = [];
+        console.log(event.target.value);
+        if(event.target.value) {
+            displayUsers = usernamesArr.filter(username => username.includes(event.target.value));
+            this.setState({
+                displayUsers: displayUsers,
+                profile: false
+            })
+        }
+        else{
+            this.setState({ displayUsers: null });
+        }
+    }
+
+    onSubmit = event => {
+        const search = event.target.value;
+        const userQuery = Firebase.database().ref('users/').orderByChild('username/').equalTo(search);
+        userQuery.once('value', snapshot => {
+            let data = snapshot.val() ? snapshot.val() : {};
+            console.log(snapshot.val());
             //let fullData = { ...data };
             this.setState({
                 display: data,
-                profile: false
+                profile: true
             })
         })
     }
 
-    renderProfile() {
-        this.setState({
-            profile: true
-        })
-    }
-
     render() {
-        var display = this.state.display;
-        const profile = this.state.profile;
+        var { display, profile, usernamesObj, displayUsers } = this.state;
         if (display !== null) {
             console.log(display);
         }
@@ -50,14 +69,24 @@ class Search extends React.Component {
             <div className="Content">
                 <div className="Content-input">
                     <input className="Search" placeholder="Search Users" onChange={this.onInputChange} />
-                    <button onClick={this.onSubmit}>Search</button>
+                    
                 </div>
                 <div className="Content-posts">
-                    {display !== null && !profile ?
-                        Object.keys(display).map((key, index) => {
-                            let user = display[key];
-                            console.log(user.posts);
-                            return <Post key={key} post={false} renderProfile={this.renderProfile} FollowUid={key} author={user.username} />
+                    {displayUsers !== null && !profile ?
+                        Object.keys(usernamesObj).map((key, index) => {
+                            let user = usernamesObj[key];
+                            if(displayUsers.includes(key)){
+                                return <Post 
+                                        key={user} 
+                                        post={false} 
+                                        renderProfile={this.onSubmit} 
+                                        FollowUid={user} 
+                                        author={key} 
+                                        />
+                            }
+                            else {
+                                return null;
+                            }
                         })
                         : null}
                     {profile ?

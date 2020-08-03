@@ -45,6 +45,8 @@ class LoginModal extends React.Component {
                 email: email
             });
 
+            Firebase.database().ref('usernames/').set({ username: SignUpResponse.user.uid });
+
             var user = Firebase.auth().currentUser;
             user.updateProfile({
                 displayName: username
@@ -77,7 +79,8 @@ class LoginModal extends React.Component {
             this.props.ActiveUser.setUser(user.user.displayName);
             this.props.ActiveUser.setEmailVerification(user.user.emailVerified);
             this.props.ActiveUser.setUid(user.user.uid);
-            this.props.history.push("/");
+            this.props.history.push('/');
+            window.location.reload(false);
         } catch (error) {
             console.log('error signing in: ', error);
             this.setState({error: error.message});
