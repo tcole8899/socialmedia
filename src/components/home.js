@@ -56,12 +56,12 @@ class Home extends React.Component {
         var following = [];
 
         followingQuery.once('value', snapshot => {
-            snapshot.forEach(function(childSnapshot) {
+            snapshot.forEach(function (childSnapshot) {
                 var key = childSnapshot.key;
                 following.push(key);
             })
             following.push(this.props.ActiveUser.user);
-            
+
             this.setState({
                 following: following
             })
@@ -92,7 +92,7 @@ class Home extends React.Component {
     renderUser() {
         var display = this.state.display;
         var following = this.state.following;
-    
+
         return (
             <div className="Content">
                 <div className="Content-input">
@@ -100,24 +100,30 @@ class Home extends React.Component {
                     <button onClick={this.sendPost}>Send</button>
                 </div>
                 <div className="Content-posts">
-                    { (display !== null && following !== null) ? 
-                            Object.keys(display).reverse().map((key, index) => {
-                                let post = display[key];
-                                if(following.includes(post.author)){
-                                    return (<Post 
-                                            key={key} 
-                                            FollowUid={post.authorId} 
-                                            date={post.date} 
-                                            postKey={key} 
-                                            post={true} 
-                                            author={post.author} 
-                                            text={post.text} />)
+                    {(display !== null && following !== null) ?
+                        Object.keys(display).reverse().map((key, index) => {
+                            let post = display[key];
+                            try {
+                                if (following.includes(post.author)) {
+                                    return (<Post
+                                        key={key}
+                                        FollowUid={post.authorId}
+                                        date={post.date.replace(/,/, " -")}
+                                        postKey={key}
+                                        post={true}
+                                        author={post.author}
+                                        text={post.text} />)
                                 }
                                 else {
                                     return null;
                                 }
-                            })
-                    : null}
+                            } catch (error) {
+                                console.error(error);
+                            };
+                            return null;
+                        }
+                        )
+                        : null}
                 </div>
             </div>
         );
