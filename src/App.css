@@ -28,13 +28,25 @@
   display: flex;
   align-items: stretch;
   padding: 10px;
+  margin: 0 auto;
+  padding-left: 15%;
+}
+
+.AuthNav > .Nav-button{
+  background-color: transparent;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 20px;
+  max-height: 30px;
   margin: auto;
 }
 
 .Nav-button{
-  background-color: rgb(116, 116, 116);
+  background-color: gray;
   color: white;
-  padding: 5px;
+  padding: 15px;
   border-radius: 5px;
   text-decoration: none;
   font-size: 20px;
@@ -43,7 +55,7 @@
 }
 
 .Nav-button:hover {
-  background-color: rgb(172, 170, 170);
+  background-color: rgb(83, 83, 83);
 }
 
 .App-content{
@@ -120,7 +132,8 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  height: stretch;
+  min-height: 85vh;
+  max-height: stretch;
   background-color: #282c34;
   margin: auto;
   padding: 10px;
@@ -134,7 +147,7 @@
 
 .Content-posts {
   height: stretch;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 .Post-input {
@@ -155,26 +168,87 @@
   background-color: white;
   width: stretch;
   height: fit-content;
-  display: flex;
-  align-items: stretch;
+  display: block;
   border: 3px solid #282c34;
 }
 
 .Post-author {
-  outline: black;
-  border-right: 1px solid black;
-  padding: 10px;
-  width: 15%;
+  width: stretch;
+  height: 40px;
+  float: left;
+  display: flex;
+  padding-left: 10px;
+  align-items: center;
 }
 
 .Post-text {
-  padding: 10px;
+  height: fit-content;
+  width: stretch;
+  text-align: left;
+  padding-left: 5%;
 }
 
-.Post-like {
+.Post-info {
+  height: 40px;
+  width: stretch;
   display: flex;
-  margin: 0 auto;
-  padding-left: 30%;
+  align-items: center;
+}
+
+.Post-like > button {
+  height: fit-content;
+  align-self: center;
+  background: transparent;
+  border: transparent;
+  font-size: 15px;
+  padding-top: 8px;
+}
+
+.Post-like > button:hover {
+  color: rgb(47, 90, 246);
+  cursor: pointer;
+}
+
+.Post-like > button:focus {
+  outline: none;
+}
+
+
+.Post-like {
+  padding-left: 10px;
+  width: fit-content;
+  display: flex;
+}
+
+.Post-comment {
+  float: left;
+  padding-top: 5px;
+  margin-right: auto;
+}
+
+.Post-comment > button{
+  float: left;
+  margin: auto;
+  background-color: transparent;
+  border: none;
+}
+
+.Post-comment > button:hover {
+  color: rgb(47, 90, 246);
+  cursor: pointer;
+}
+
+.Post-commment > button:focus {
+  outline: none;
+}
+
+
+
+.Post-date {
+  padding-right: 10px;
+  float: right;
+  align-self: right;
+  margin-left: auto;
 }
 
 .Search {

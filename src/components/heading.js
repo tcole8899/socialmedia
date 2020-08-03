@@ -1,4 +1,5 @@
 import React from 'react';
+import {AiOutlineHome, AiOutlineSearch, AiOutlineUser} from 'react-icons/ai';
 import Firebase from '../Config/Firebase';
 
 class Heading extends React.Component {
@@ -30,9 +31,9 @@ class Heading extends React.Component {
                 {
                     this.props.ActiveUser.Authenticated && user ?
                         <div className="AuthNav">
-                            <a href="/" className="Nav-button">Feed</a>
-                            <a href='/search' className="Nav-button">Search</a>
-                            <a href='/profile' className="Nav-button">Profile</a>
+                            <a href="/" className="Nav-button"><AiOutlineHome /></a>
+                            <a href='/search' className="Nav-button"><AiOutlineSearch /></a>
+                            <a href='/profile' className="Nav-button"><AiOutlineUser /></a>
                         </div>
                         : null
                 }

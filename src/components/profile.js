@@ -53,7 +53,7 @@ class Profile extends React.Component {
 
         postQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-          //  let fullData = {...data};
+            //  let fullData = {...data};
             this.setState({
                 display: data
             })
@@ -72,19 +72,24 @@ class Profile extends React.Component {
                     <button onClick={this.sendPost}>Send</button>
                 </div>
                 <div className="Content-posts">
-                    {display !== null ? 
-                            Object.keys(display).reverse().map((key, index) => {
-                                let post = display[key];
-                                return (<Post 
-                                    key={key}  
-                                    FollowUid={post.authorId} 
-                                    date={post.date} 
-                                    postKey={key} 
-                                    post={true} 
-                                    author={post.author} 
+                    {display !== null ?
+                        Object.keys(display).reverse().map((key, index) => {
+                            let post = display[key];
+                            try {
+                                return (<Post
+                                    key={key}
+                                    FollowUid={post.authorId}
+                                    date={post.date.replace(/,/, " -")}
+                                    postKey={key}
+                                    post={true}
+                                    author={post.author}
                                     text={post.text} />)
-                                })
-                    : null}
+                            } catch (error) {
+                                console.error(error);
+                            }
+                            return null;
+                        })
+                        : null}
                 </div>
             </div>
         );

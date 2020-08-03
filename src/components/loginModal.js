@@ -45,7 +45,9 @@ class LoginModal extends React.Component {
                 email: email
             });
 
-            Firebase.database().ref('usernames/').set({ username: SignUpResponse.user.uid });
+            var updates ={}
+            updates['usernames/' + username] = SignUpResponse.user.uid;
+            Firebase.database().ref().update(updates);
 
             var user = Firebase.auth().currentUser;
             user.updateProfile({
