@@ -1,12 +1,15 @@
 import React from 'react';
 import Firebase from '../Config/Firebase.js';
 import Post from './post.js';
+import User from './user.js';
 
 class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             search: null,
+            searchUser: null,
+            showUser: false,
             usernamesArr: null,
             usernamesObj: null,
             displayUsers: null,
@@ -39,11 +42,15 @@ class Search extends React.Component {
             displayUsers = usernamesArr.filter(username => username.includes(event.target.value));
             this.setState({
                 displayUsers: displayUsers,
-                profile: false
+                profile: false,
+                showUser: false
             })
         }
         else {
-            this.setState({ displayUsers: null });
+            this.setState({ 
+                displayUsers: null,
+                showUser: true 
+            });
         }
     }
 
@@ -56,64 +63,69 @@ class Search extends React.Component {
             //let fullData = { ...data };
             this.setState({
                 display: data,
-                profile: true
+                profile: true,
+                searchUser: Object.keys(data)[0],
+                showUser: true
             })
         })
     }
 
     render() {
-        var { display, profile, usernamesObj, displayUsers } = this.state;
+        var { display, profile, usernamesObj, displayUsers, searchUser, showUser} = this.state;
         if (display !== null) {
             console.log(display);
         }
         return (
-            <div className="Content">
-                <div className="Content-input">
-                    <input className="Search" placeholder="Search by Username" onChange={this.onInputChange} />
+            <div className="Profile">
+                {searchUser && showUser ? <User uid={searchUser} profile={false} /> : null}
+                <div className="Content">
+                    <div className="Content-input">
+                        <input className="Search" placeholder="Search by Username" onChange={this.onInputChange} />
 
-                </div>
-                <div className="Content-posts">
-                    {displayUsers !== null && !profile ?
-                        Object.keys(usernamesObj).map((key, index) => {
-                            let user = usernamesObj[key];
-                            if (displayUsers.includes(key)) {
-                                return <Post
-                                    key={user}
-                                    post={false}
-                                    renderProfile={this.onSubmit}
-                                    FollowUid={user}
-                                    author={key}
-                                />
-                            }
-                            else {
-                                return null;
-                            }
-                        })
-                        : null}
-                    {profile ?
-                        Object.keys(display).map((key, index) => {
-                            let user = display[key];
-                            console.log(user);
-                            return Object.keys(user.posts).map((keyP, indexP) => {
-                                let post = user.posts[keyP];
-                                console.log(post);
-                                try {
-                                    return (<Post
-                                        key={keyP}
-                                        likes={post.likes}
-                                        FollowUid={post.authorId}
-                                        date={post.date.replace(/,/, " -")}
-                                        postKey={keyP}
-                                        post={true}
-                                        author={post.author}
-                                        text={post.text} />)
-                                } catch (error) {
-                                    console.error(error);
+                    </div>
+                    <div className="Content-posts">
+                        {displayUsers !== null && !profile ?
+                            Object.keys(usernamesObj).map((key, index) => {
+                                let user = usernamesObj[key];
+                                if (displayUsers.includes(key)) {
+                                    return <Post
+                                        key={user}
+                                        post={false}
+                                        renderProfile={this.onSubmit}
+                                        FollowUid={user}
+                                        author={key}
+                                    />
                                 }
-                                return null;
+                                else {
+                                    return null;
+                                }
                             })
-                        })
-                        : null}
+                            : null}
+                        {profile ?
+                            Object.keys(display).map((key, index) => {
+                                let user = display[key];
+                                console.log(user);
+                                return Object.keys(user.posts).map((keyP, indexP) => {
+                                    let post = user.posts[keyP];
+                                    console.log(post);
+                                    try {
+                                        return (<Post
+                                            key={keyP}
+                                            likes={post.likes}
+                                            FollowUid={post.authorId}
+                                            date={post.date.replace(/,/, " -")}
+                                            postKey={keyP}
+                                            post={true}
+                                            author={post.author}
+                                            text={post.text} />)
+                                    } catch (error) {
+                                        console.error(error);
+                                    }
+                                    return null;
+                                })
+                            })
+                            : null}
+                    </div>
                 </div>
             </div>
         );

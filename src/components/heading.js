@@ -10,7 +10,7 @@ class Heading extends React.Component {
             console.log(out);
             this.props.ActiveUser.setAuthentication(false);
             this.props.ActiveUser.setUser(null);
-            this.props.history.push("/");
+            window.location.assign('/');
         } catch (error) {
             console.log(error);
         }

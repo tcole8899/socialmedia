@@ -25,6 +25,7 @@ class Post extends React.Component {
             comment: this.props.comment
         })
         this.likeStatus();
+        this.followStatus();
     }
 
     toggleComments() {
@@ -52,26 +53,45 @@ class Post extends React.Component {
 
         likeQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : 0;
-            console.log(data);
             this.setState({ likes: data });
         })
+    }
+
+    followStatus() {
+        const author = this.props.author;
+        const user = Firebase.auth().currentUser;
+
+        var followStatus = Firebase.database().ref('users/' + user.uid + '/following/');
+        console.log(followStatus);
+
+        followStatus.once('value', snapshot => {
+            let data = snapshot.val() ? snapshot.val() : {};
+            let status = Object.keys(data).includes(author);
+
+            this.setState({
+                followed: status
+            });
+
+            console.log(status);
+        } )
     }
 
 
     followUser() {
         const author = this.props.author;
         const FollowUid = this.props.FollowUid;
+        const followed = this.state.followed;
 
         var user = Firebase.auth().currentUser;
         console.log(user);
 
         var updates = {};
-        updates['users/' + user.uid + '/following/' + author] = FollowUid;
-        updates['users/' + FollowUid + '/followers/' + user.uid] = user.displayName;
+        updates['users/' + user.uid + '/following/' + author] = followed ? null : FollowUid;
+        updates['users/' + FollowUid + '/followers/' + user.uid] = followed ? null : user.displayName;
 
         Firebase.database().ref().update(updates);
 
-        this.setState({ followed: true });
+        this.setState({ followed: !followed });
     }
 
     likePost() {
@@ -162,7 +182,7 @@ class Post extends React.Component {
                     <button onClick={this.props.renderProfile} value={this.props.author}>@{this.props.author}</button>
                 </div>
                 <div className="Post-follow">
-                    {this.state.follow ? <button>Unfollow</button> : <button onClick={this.followUser}>Follow</button>}
+                    {this.state.followed ? <button onClick={this.followUser}>Unfollow</button> : <button onClick={this.followUser}>Follow</button>}
                 </div>
             </div>
         )

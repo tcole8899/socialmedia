@@ -1,6 +1,7 @@
 import React from 'react';
 import Firebase from '../Config/Firebase.js';
 import Post from './post.js';
+import User from './user.js';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -62,34 +63,39 @@ class Profile extends React.Component {
 
     render() {
         var display = this.state.display;
+        var UID = this.props.ActiveUser.uid;
+        console.log(UID);
         // if(display !== null){
         //     console.log(display);
         // }
         return (
-            <div className="Content">
-                <div className="Content-input">
-                    <textarea className="Post-input" placeholder="Enter Text Here" onChange={this.onInputChange} />
-                    <button onClick={this.sendPost}>Send</button>
-                </div>
-                <div className="Content-posts">
-                    {display !== null ?
-                        Object.keys(display).reverse().map((key, index) => {
-                            let post = display[key];
-                            try {
-                                return (<Post
-                                    key={key}
-                                    FollowUid={post.authorId}
-                                    date={post.date.replace(/,/, " -")}
-                                    postKey={key}
-                                    post={true}
-                                    author={post.author}
-                                    text={post.text} />)
-                            } catch (error) {
-                                console.error(error);
-                            }
-                            return null;
-                        })
-                        : null}
+            <div className="Profile">
+                {UID ? <User uid={UID} profile={true} /> : null}
+                <div className="Content">
+                    <div className="Content-input">
+                        <textarea className="Post-input" placeholder="Enter Text Here" onChange={this.onInputChange} />
+                        <button onClick={this.sendPost}>Send</button>
+                    </div>
+                    <div className="Content-posts">
+                        {display !== null ?
+                            Object.keys(display).reverse().map((key, index) => {
+                                let post = display[key];
+                                try {
+                                    return (<Post
+                                        key={key}
+                                        FollowUid={post.authorId}
+                                        date={post.date.replace(/,/, " -")}
+                                        postKey={key}
+                                        post={true}
+                                        author={post.author}
+                                        text={post.text} />)
+                                } catch (error) {
+                                    console.error(error);
+                                }
+                                return null;
+                            })
+                            : null}
+                    </div>
                 </div>
             </div>
         );
