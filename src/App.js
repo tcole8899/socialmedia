@@ -67,8 +67,8 @@ class App extends React.Component {
           <div>
             <Heading ActiveUser={ActiveUser} />
             <Switch>
-              <Route exact path="/" render={(props) => <Home {...props} ActiveUser={ActiveUser} />} />
-              <Route exact path="/login" render={(props) => <LoginModal {...props} ActiveUser={ActiveUser} />} />
+              <Route exact path="/home" render={(props) => <Home {...props} ActiveUser={ActiveUser} />} />
+              <Route exact path="/" render={(props) => <LoginModal {...props} ActiveUser={ActiveUser} inline={false} />} />
               <Route exact path="/welcome" render={() => <Welcome ActiveUser={ActiveUser} />} />
               <Route exact path="/profile" render={(props) => <Profile {...props} ActiveUser={ActiveUser} />} />
               <Route exact path="/search" render={(props) => <Search {...props} ActiveUser={ActiveUser} />} />

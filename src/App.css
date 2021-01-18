@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #ffffff;
   display: flex;
   align-items: stretch;
   width: stretch;
@@ -35,7 +35,7 @@
 
 .AuthNav > .Nav-button{
   background-color: transparent;
-  color: white;
+  color: black;
   padding: 15px;
   border-radius: 5px;
   text-decoration: none;
@@ -46,7 +46,7 @@
 
 .Nav-button{
   background-color: gray;
-  color: white;
+  color: black;
   padding: 10px;
   border-radius: 5px;
   text-decoration: none;
@@ -55,7 +55,7 @@
 }
 
 .Nav-button:hover {
-  background-color: rgb(83, 83, 83);
+  background-color: rgb(234, 234, 234);
 }
 
 .App-content{
@@ -134,7 +134,7 @@
   align-items: stretch;
   min-height: 85vh;
   max-height: stretch;
-  background-color: #282c34;
+  background-color: white;
   margin: auto;
   padding-top: 110px;
   padding-bottom: 10px;
@@ -164,7 +164,7 @@
 }
 
 .Profile {
-  background-color: #282c34;
+  background-color: white;
   display: block;
 }
 
@@ -187,6 +187,7 @@
   border-radius: 100px;
   background-repeat: no-repeat;
   background-size: 100px;
+  margin: 0 auto;
 }
 
 .Content > button {

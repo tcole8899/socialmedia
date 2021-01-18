@@ -35,15 +35,19 @@ class User extends React.Component {
         console.log(userData);
         
         return (
-            <div className="UserInfo">
-                <div className="User">
-                </div>
+            <div className="bg-light border">
                 {(userData && profile) ?
-                    <div>
-                        <p>@{userData.username}</p>
-                        <p>{userData.fullname}</p>
-                        
-                        { userData.following !== null ? <p>{Object.keys(userData.following).length} Following</p> : null}
+                    <div className="col  mt-2">
+                        <div className="row-12 User mb-2"></div>
+                        <div className="row-12">
+                            <p>@{userData.username}</p>
+                        </div>
+                        <div className="row-12">
+                            <p>{userData.fullname}</p>
+                        </div>
+                        <div className="row-12">
+                            { userData.following !== null ? <p>{Object.keys(userData.following).length} Following</p> : null}
+                        </div>
                     </div>
                     :
                     null

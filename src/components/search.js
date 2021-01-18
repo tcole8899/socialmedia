@@ -78,11 +78,10 @@ class Search extends React.Component {
         return (
             <div className="Profile">
                 {searchUser && showUser ? <User uid={searchUser} profile={false} /> : null}
-                <div className="Content">
-                    <div className="Content-input">
-                        <input className="Search" placeholder="Search by Username" onChange={this.onInputChange} />
-
-                    </div>
+                <div className="container mt-5">
+                    <form>
+                        <input className="form-control" placeholder="Search by Username" onChange={this.onInputChange} />
+                    </form>
                     <div className="Content-posts">
                         {displayUsers !== null && !profile ?
                             Object.keys(usernamesObj).map((key, index) => {

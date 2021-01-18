@@ -94,11 +94,15 @@ class Home extends React.Component {
         var following = this.state.following;
 
         return (
-            <div className="Content">
-                <div className="Content-input">
-                    <textarea className="Post-input" placeholder="Enter Text Here" onChange={this.onInputChange} />
-                    <button onClick={this.sendPost}>Send</button>
-                </div>
+            <div className="container mt-3">
+                <form className="row row-cols-lg-auto g-3 align-items-center mb-3">
+                    <div className="col-12">
+                        <div className="input-group">
+                            <textarea className="form-control" placeholder="Enter Text Here" onChange={this.onInputChange} />
+                            <button className="btn btn-outline-primary" onClick={this.sendPost}>Send</button>
+                        </div>
+                    </div>
+                </form>
                 <div className="Content-posts">
                     {(display !== null && following !== null) ?
                         Object.keys(display).reverse().map((key, index) => {
@@ -131,7 +135,7 @@ class Home extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="container-fluid">
                 {this.props.ActiveUser.Authenticated ? this.renderUser() : this.renderNoUser()}
             </div>
         );

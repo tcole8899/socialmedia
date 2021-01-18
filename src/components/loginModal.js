@@ -5,7 +5,8 @@ class LoginModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: true,
+            login: false,
+            inline: this.props.inline,
             fullname: "",
             username: "",
             email: "",
@@ -64,8 +65,6 @@ class LoginModal extends React.Component {
                 console.log(error);
               });
 
-            this.props.history.push("/welcome");
-
         } catch (error) {
             console.log(error);
             this.setState({error: error.message});
@@ -81,8 +80,7 @@ class LoginModal extends React.Component {
             this.props.ActiveUser.setUser(user.user.displayName);
             this.props.ActiveUser.setEmailVerification(user.user.emailVerified);
             this.props.ActiveUser.setUid(user.user.uid);
-            this.props.history.push('/');
-            window.location.reload(false);
+            window.location.assign('/home');
         } catch (error) {
             console.log('error signing in: ', error);
             this.setState({error: error.message});
@@ -91,49 +89,94 @@ class LoginModal extends React.Component {
 
     renderSignUp() {
         return (
-            <div className="Form-Content">
-                <h1>Sign Up</h1>
+            <div>
+                <div className="border-bottom mb-2">
+                        <h3 className="mb-3">Sign Up</h3>
+                </div>
                 {this.state.error !== "" ? <p className="Error">Error signing up: {this.state.error}</p> : null}
-                <label htmlFor="Fullname"><b>Full Name</b></label>
-                <input type="text" placeholder='Fullname' name="Fullname" id="fullname" onChange={this.onInputChange} />
-                <label htmlFor="Username"><b>Username</b></label>
-                <input type="text" placeholder='Username' name="Username" id="username" onChange={this.onInputChange} />
-                <label htmlFor="Email"><b>Email</b></label>
-                <input type="text" placeholder='Email' name="Email" id="email" onChange={this.onInputChange} />
-                <label htmlFor="Password"><b>Password</b></label>
-                <input type="password" placeholder='Password' name="Password" id="password" onChange={this.onInputChange} />
-                <label htmlFor="Confirm-Password"><b>Confirm Password</b></label>
-                <input type="password" placeholder='Confirm Password' name="Confirm-Password" id="confirmpassword" onChange={this.onInputChange} />
-                <button className="Form-Submit" onClick={this.handleSignUp}>Sign Up</button>
-                <button className="SignUp" onClick={this.toggleSignUp}>Already Have an Account? Click Here to Log In!</button>
+                <div className="row mb-3">
+                    <div className="col-md-12">
+                        <label htmlFor="Fullname" className="form-label float-left ml-1 mt-1">Full Name</label>
+                        <input type="text" className="form-control" placeholder='First and Last' name="Fullname" id="fullname" onChange={this.onInputChange} />
+                    </div>
+                    <div className="col-md-6">
+                        <label htmlFor="Username" className="form-label float-left ml-1 mt-1">Username</label>
+                        <input type="text" className="form-control" placeholder='No Spaces' name="Username" id="username" onChange={this.onInputChange} />
+                    </div>
+                    <div className="col-md-6">
+                        <label htmlFor="Email" className="form-label float-left ml-1 mt-1">Email</label>
+                        <input type="text" className="form-control" placeholder='example@email.com' name="Email" id="email" onChange={this.onInputChange} />
+                    </div>
+                    <div className="col-md-6">
+                        <label htmlFor="Password" className="form-label float-left ml-1 mt-1">Password</label>
+                        <input type="password" className="form-control" placeholder='8 Characters No Spaces' name="Password" id="password" onChange={this.onInputChange} />
+                    </div>
+                    <div className="col-md-6 mb-2">
+                        <label htmlFor="Confirm-Password" className="form-label float-left ml-1 mt-1">Confirm Password</label>
+                        <input type="password" className="form-control" placeholder='Re-enter Password' name="Confirm-Password" id="confirmpassword" onChange={this.onInputChange} />
+                    </div>
+                </div>
+                <div className="border-top">
+                    <button className="btn btn-outline-success mt-2" onClick={this.handleSignUp}>Sign Up</button>
+                    <button className="btn btn-link mb-3 mt-3" onClick={this.toggleSignUp}>Already Have an Account? Click Here to Log In!</button>
+                </div>
             </div>
         );
     }
 
     renderLogIn() {
         return (
-            <div className="Form-Content">
-                <h1>Log In</h1>
-                <p>Welcome Back!</p>
+            <div>
+                <div className="border-bottom mb-3">
+                        <h3>Welcome Back!</h3>
+                </div>
                 {this.state.error !== "" ? <p className="Error">Error signing in: {this.state.error}</p> : null}
-                <label htmlFor="Email"><b>Email</b></label>
-                <input type="text" placeholder='Email' name="Email" id="email" onChange={this.onInputChange} />
-                <label htmlFor="Password"><b>Password</b></label>
-                <input type="password" placeholder='Password' name="Password" id="password" onChange={this.onInputChange} />
-                <button className="Form-Submit" onClick={this.handleLogIn}>Log In</button>
-                <button className="SignUp" onClick={this.toggleSignUp}>Don't Have an Account? Click Here to Sign Up!</button>
-                <button className="SignUp">Forgot Password?</button>
+                <div className="mb-1">
+                    <label for="Email" className="form-label float-left ml-1 mt-1">Email</label>
+                    <input type="text" className="form-control" placeholder='email@example.com' name="Email" id="email" onChange={this.onInputChange} />
+                </div>
+                <div className="mb-4">
+                    <label for="Password" className="form-label float-left ml-1 mt-1">Password</label>
+                    <input type="password" className="form-control" name="Password" id="password" onChange={this.onInputChange} />
+                </div>
+                <div className="border-top">
+                    <button className="btn btn-outline-success mt-4" onClick={this.handleLogIn}>Log In</button>
+                    <button className="btn btn-link mt-3" onClick={this.toggleSignUp}>Don't Have an Account? Click Here to Sign Up!</button>
+                </div>
+                <button className="btn btn-link">Forgot Password?</button>
             </div>
+        );
+    }
+
+    renderInlineLogIn() {
+        return (
+            <form className="form-inline mx-sm-9" action="/home" method="POST">
+                <div className="form-group mx-3 mb-3">
+                    <input type="text" className="form-control" placeholder='Email' name="Email" id="email" onChange={this.onInputChange} />
+                </div>
+                <div className="form-group mx-3 mb-3">
+                    <input type="password" className="form-control" placeholder='Password' name="Password" id="password" onChange={this.onInputChange} />
+                </div>
+                <div className="form-group mx-sm-3 mb-2">
+                    <button className="btn btn-outline-success mb-2" onClick={this.handleLogIn}>Log In</button>
+                </div>
+            </form>
         );
     }
 
 
     render() {
         return (
-            <div className="Login-background">
-                <form className="Login-form">
-                    {this.state.login ? this.renderLogIn() : this.renderSignUp()}
-                </form>
+            <div className="container-fluid mt-4">
+                { 
+                this.state.inline ? 
+                this.renderInlineLogIn() : 
+                  (
+                    <form className="Login-form">
+                        {this.state.login ?  this.renderLogIn() : this.renderSignUp()}
+                    </form>
+                  )
+                }
             </div>
         );
     }

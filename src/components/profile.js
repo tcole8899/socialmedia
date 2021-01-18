@@ -69,13 +69,19 @@ class Profile extends React.Component {
         //     console.log(display);
         // }
         return (
-            <div className="Profile">
-                {UID ? <User uid={UID} profile={true} /> : null}
-                <div className="Content">
-                    <div className="Content-input">
-                        <textarea className="Post-input" placeholder="Enter Text Here" onChange={this.onInputChange} />
-                        <button onClick={this.sendPost}>Send</button>
-                    </div>
+            <div className="row row-cols-lg-auto m-3">
+                <div className="col-md-2">
+                    {UID ? <User uid={UID} profile={true} /> : null}
+                </div>
+                <div className="col-md-10">
+                    <form className="row row-cols-lg-auto g-3 align-items-center mb-3">
+                        <div className="col-12">
+                            <div className="input-group">
+                                <textarea className="form-control" placeholder="Enter Text Here" onChange={this.onInputChange} />
+                                <button className="btn btn-outline-primary" onClick={this.sendPost}>Send</button>
+                            </div>
+                        </div>
+                    </form>
                     <div className="Content-posts">
                         {display !== null ?
                             Object.keys(display).reverse().map((key, index) => {

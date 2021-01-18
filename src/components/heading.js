@@ -1,6 +1,7 @@
 import React from 'react';
 import {AiOutlineHome, AiOutlineSearch, AiOutlineUser} from 'react-icons/ai';
 import Firebase from '../Config/Firebase';
+import LoginModal from './loginModal.js';
 
 class Heading extends React.Component {
     logOut = async event => {
@@ -20,29 +21,31 @@ class Heading extends React.Component {
     render() {
         const user = this.props.ActiveUser.user;
         return (
-            <nav className="App-header">
-                <div className="Title">
+            <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div className="container-fluid">
+                    <div className="navbar-brand mt-2 d-none d-sm-block">
+                        {
+                            this.props.ActiveUser.Authenticated && user ?
+                                <p>{user}</p>
+                                : <p>Tyler's Social Media Project</p>
+                        }
+                    </div>
                     {
                         this.props.ActiveUser.Authenticated && user ?
-                            <p>{user}</p>
-                            : <p>Tyler's Social Media Project</p>
+                            <div className="btn-group">
+                                <a href="/home" className="btn btn-outline-secondary"><AiOutlineHome /></a>
+                                <a href='/search' className="btn btn-outline-secondary"><AiOutlineSearch /></a>
+                                <a href='/profile' className="btn btn-outline-secondary"><AiOutlineUser /></a>
+                            </div>
+                            : null
                     }
-                </div>
-                {
-                    this.props.ActiveUser.Authenticated && user ?
-                        <div className="AuthNav">
-                            <a href="/" className="Nav-button"><AiOutlineHome /></a>
-                            <a href='/search' className="Nav-button"><AiOutlineSearch /></a>
-                            <a href='/profile' className="Nav-button"><AiOutlineUser /></a>
-                        </div>
-                        : null
-                }
-                <div className="Navigation">
-                    {
-                        this.props.ActiveUser.Authenticated && user ?
-                            <a href="/" onClick={this.logOut} className="Nav-button">  LOG OUT </a>
-                            : <a href="/login" className="Nav-button">  LOG IN </a>
-                    }
+                    <div className="float-right">
+                        {
+                            this.props.ActiveUser.Authenticated && user ?
+                                <a href="/" onClick={this.logOut} className="btn btn-outline-danger">  LOG OUT </a>
+                                : <LoginModal ActiveUser={this.props.ActiveUser} inline={true} />
+                        }
+                    </div>
                 </div>
             </nav>
         );

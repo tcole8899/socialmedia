@@ -132,24 +132,24 @@ class Post extends React.Component {
         var { liked, comment } = this.state;
         var text = liked ? <AiFillHeart /> : <AiOutlineHeart />;
         return (
-            <div className="Post">
-                <div className="Post-author">
-                    <h5>@{this.props.author}</h5>
-                </div>
-                <div className="Post-text">
-                    <p>{this.props.text}</p>
-                </div>
-                <div className="Post-info">
-                    <div className="Post-like">
-                        <p>{this.state.likes} Likes</p>
-                        <button onClick={this.likePost}>{text}</button>
+            <div className="border border-secondary rounded mb-2">
+                <div className="row mt-1">
+                    <div className="col-md-2">
+                        <p><b>@{this.props.author}</b></p>
                     </div>
-                    <div className="Post-comment">
+                    <div className="col-md-10 text-left">
+                        <p>{this.props.text}</p>
+                    </div>
+                </div>
+                <div className="row mb-1">
+                    <div className="col-md-3 btn-group ml-4" role="group">
+                        <div className="btn btn-sm btn-outline-secondary mt-1 mb-1">{this.state.likes} Likes</div>
+                        <button className="btn btn-sm btn-outline-danger mt-1 mb-1" onClick={this.likePost}>{text}</button>
                         {comment ? null :
-                                <button onClick={this.toggleComments}>Comment</button>
+                                <button className="btn btn-sm btn-outline-primary m-1 float-right" onClick={this.toggleComments}>Comment</button>
                         }
                     </div>
-                    <div className="Post-date">
+                    <div className="col-md float-right">
                         <p>{this.props.date}</p>
                     </div>
                 </div>
