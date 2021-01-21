@@ -11,12 +11,21 @@ class Post extends React.Component {
             likes: null,
             followed: false,
             liked: false,
+            commentModal: false,
             comment: false,
-            commentModal: false
+            commentButton: "Comment"
         }
-        this.toggleComments = this.toggleComments.bind(this);
         this.followUser = this.followUser.bind(this);
+        this.toggleComments = this.toggleComments.bind(this);
         this.likePost = this.likePost.bind(this);
+    }
+
+    toggleComments(){
+        let btnTxt = (this.state.commentModal) ? "Comment" : "Collapse";
+        this.setState({
+            commentModal: !this.state.commentModal,
+            commentButton: btnTxt
+        });
     }
 
     componentDidMount() {
@@ -26,12 +35,6 @@ class Post extends React.Component {
         })
         this.likeStatus();
         this.followStatus();
-    }
-
-    toggleComments() {
-        this.setState({
-            commentModal: !this.state.commentModal
-        })
     }
 
     likeStatus() {
@@ -62,17 +65,12 @@ class Post extends React.Component {
         const user = Firebase.auth().currentUser;
 
         var followStatus = Firebase.database().ref('users/' + user.uid + '/following/');
-        console.log(followStatus);
-
         followStatus.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
             let status = Object.keys(data).includes(author);
-
             this.setState({
                 followed: status
             });
-
-            console.log(status);
         } )
     }
 
@@ -83,7 +81,6 @@ class Post extends React.Component {
         const followed = this.state.followed;
 
         var user = Firebase.auth().currentUser;
-        console.log(user);
 
         var updates = {};
         updates['users/' + user.uid + '/following/' + author] = followed ? null : FollowUid;
@@ -100,9 +97,6 @@ class Post extends React.Component {
         const user = Firebase.auth().currentUser;
         var { liked, likes } = this.state;
         var newLikeCount = liked ? likes - 1 : likes + 1;
-        console.log(likes);
-
-        console.log()
 
         var userLikeQuery = Firebase.database().ref('users/' + likeUid + '/posts/' + postKey + '/likes');
         var postLikeQuery = Firebase.database().ref('userPosts/' + postKey + '/likes');
@@ -134,23 +128,23 @@ class Post extends React.Component {
         return (
             <div className="border border-secondary rounded mb-2">
                 <div className="row mt-1">
-                    <div className="col-md-2">
-                        <p><b>@{this.props.author}</b></p>
+                    <div className="col-auto">
+                        <p className="m-2"><b>@{this.props.author}</b></p>
                     </div>
-                    <div className="col-md-10 text-left">
-                        <p>{this.props.text}</p>
+                    <div className="col-auto text-left">
+                        <p className="m-2">{this.props.text}</p>
                     </div>
                 </div>
-                <div className="row mb-1">
-                    <div className="col-md-3 btn-group ml-4" role="group">
+                <div className="row justify-content-between m-1">
+                    <div className="col-md-4 btn-group" role="group">
                         <div className="btn btn-sm btn-outline-secondary mt-1 mb-1">{this.state.likes} Likes</div>
                         <button className="btn btn-sm btn-outline-danger mt-1 mb-1" onClick={this.likePost}>{text}</button>
                         {comment ? null :
-                                <button className="btn btn-sm btn-outline-primary m-1 float-right" onClick={this.toggleComments}>Comment</button>
+                                <button className="btn btn-sm btn-outline-primary m-1 float-right" data-toggle="collapse" data-target="#commentModal" aria-expanded="false" aria-controls="commentModal" onClick={this.toggleComments}>{this.state.commentButton}</button>
                         }
                     </div>
-                    <div className="col-md float-right">
-                        <p>{this.props.date}</p>
+                    <div className="col-md-2">
+                        <p className="m-1 text-muted">{this.props.date.split(",", 1)}</p>
                     </div>
                 </div>
 
@@ -162,7 +156,9 @@ class Post extends React.Component {
         const followUid = this.props.FollowUid;
         return (
             <div>
-                <Comments
+                <Comments 
+                    className="collapse show" 
+                    id="commentModal"
                     postId={this.props.postKey}
                     toggleComments={this.toggleComments}
                     author={this.props.author}
@@ -177,12 +173,14 @@ class Post extends React.Component {
 
     renderSearch() {
         return (
-            <div className="Post">
-                <div className="Post-author">
-                    <button onClick={this.props.renderProfile} value={this.props.author}>@{this.props.author}</button>
-                </div>
-                <div className="Post-follow">
-                    {this.state.followed ? <button onClick={this.followUser}>Unfollow</button> : <button onClick={this.followUser}>Follow</button>}
+            <div className="border border-secondary rounded mb-2">
+                <div className="row">
+                    <div className="col-auto">
+                        <button className="btn m-2 btn-sm btn-outline-secondary " onClick={this.props.renderProfile} value={this.props.author}>@{this.props.author}</button>
+                    </div>
+                    <div className="col-auto">
+                        {this.state.followed ? <button className="btn m-2 btn-sm btn-outline-danger " onClick={this.followUser}>Unfollow</button> : <button className="btn mt-2 mb-2 btn-sm btn-outline-primary " onClick={this.followUser}>Follow</button>}
+                    </div>
                 </div>
             </div>
         )

@@ -57,8 +57,6 @@ class Comments extends React.Component {
 
         commentQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {}
-            console.log(data);
-
             this.setState({
                 display: data
             })
@@ -69,42 +67,33 @@ class Comments extends React.Component {
 
     render() {
         var display = this.state.display;
-        console.log(display);
+
         return (
-            <div className="Login-background">
-                <div className="Login-form">
-                    <button onClick={this.props.toggleComments} >Close</button>
-                    <Post
-                        author={this.props.author}
-                        postKey={this.props.postId}
-                        text={this.props.text}
-                        date={this.props.date}
-                        post={true}
-                        comment={true}
-                    />
-                    <div>
-                        <div className="Content-input">
-                            <textarea className="Post-input" placeholder="Enter Text Here" onChange={this.onInputChange} />
-                            <button onClick={this.sendComment}>Send</button>
+            <div className="card mb-2">
+                <div className="card-body ml-3 mr-3">
+                    <form className="row row-cols-lg-auto g-3 align-items-center mb-3">
+                        <div className="input-group">
+                            <textarea className="form-control" placeholder="Enter Text Here" onChange={this.onInputChange} />
+                            <button className="btn btn-outline-primary" onClick={this.sendComment}>Send</button>
                         </div>
-                        <div className="Content-posts">
-                            {display !== null ?
-                                Object.keys(display).reverse().map((key, index) => {
-                                    let post = display[key];
-                                    return (<Post
-                                        key={key}
-                                        likes={post.likes}
-                                        FollowUid={post.authorId}
-                                        date={post.date}
-                                        postKey={key}
-                                        post={true}
-                                        author={post.author}
-                                        text={post.text} 
-                                        comment={true}
-                                        />)
-                                })
-                                : null}
-                        </div>
+                    </form>
+                    <div className="Content-posts">
+                        {display !== null ?
+                            Object.keys(display).reverse().map((key, index) => {
+                                let post = display[key];
+                                return (<Post
+                                    key={key}
+                                    likes={post.likes}
+                                    FollowUid={post.authorId}
+                                    date={post.date}
+                                    postKey={key}
+                                    post={true}
+                                    author={post.author}
+                                    text={post.text} 
+                                    comment={true}
+                                    />)
+                            })
+                            : "This post has no comments!"}
                     </div>
                 </div>
             </div>

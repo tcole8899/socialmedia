@@ -1,5 +1,6 @@
 import React from 'react';
 import Post from './post.js';
+import LoginModal from './loginModal.js';
 import Firebase from '../Config/Firebase.js';
 
 class Home extends React.Component {
@@ -43,6 +44,9 @@ class Home extends React.Component {
             updates['users/' + this.props.ActiveUser.uid + '/posts/' + newPostKey] = post;
             updates['userPosts/' + newPostKey] = post;
             Firebase.database().ref().update(updates);
+
+            document.getElementById('post').value = "";
+
             this.getData();
         } catch (error) {
             console.log(error);
@@ -71,7 +75,6 @@ class Home extends React.Component {
 
         feedQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-            console.log(data);
             //let fullData = { ...data };
             this.setState({
                 display: data
@@ -90,15 +93,18 @@ class Home extends React.Component {
     }
 
     renderUser() {
+        if (this.state.display === null) {
+            this.getData();
+        }
         var display = this.state.display;
         var following = this.state.following;
 
         return (
-            <div className="container mt-3">
-                <form className="row row-cols-lg-auto g-3 align-items-center mb-3">
+            <div className="container padding">
+                <form className="row row-cols-lg-auto g-3 align-items-center mb-3" onSubmit="">
                     <div className="col-12">
                         <div className="input-group">
-                            <textarea className="form-control" placeholder="Enter Text Here" onChange={this.onInputChange} />
+                            <textarea id="post" className="form-control" placeholder="Enter Text Here" onChange={this.onInputChange} />
                             <button className="btn btn-outline-primary" onClick={this.sendPost}>Send</button>
                         </div>
                     </div>
@@ -112,7 +118,7 @@ class Home extends React.Component {
                                     return (<Post
                                         key={key}
                                         FollowUid={post.authorId}
-                                        date={post.date.replace(/,/, " -")}
+                                        date={post.date}
                                         postKey={key}
                                         post={true}
                                         author={post.author}
@@ -136,7 +142,7 @@ class Home extends React.Component {
     render() {
         return (
             <div className="container-fluid">
-                {this.props.ActiveUser.Authenticated ? this.renderUser() : this.renderNoUser()}
+                {this.props.ActiveUser.Authenticated ? this.renderUser() : <LoginModal {...this.state.props} ActiveUser={this.props.ActiveUser} inline={false} />}
             </div>
         );
     }

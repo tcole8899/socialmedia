@@ -46,8 +46,9 @@ class LoginModal extends React.Component {
                 email: email
             });
 
-            var updates ={}
+            var updates = {};
             updates['usernames/' + username] = SignUpResponse.user.uid;
+
             Firebase.database().ref().update(updates);
 
             var user = Firebase.auth().currentUser;
@@ -64,7 +65,18 @@ class LoginModal extends React.Component {
               }).catch(function(error) {
                 console.log(error);
               });
-
+            
+            try {
+                const user = await Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
+                this.props.ActiveUser.setAuthentication(true);
+                this.props.ActiveUser.setUser(user.user.displayName);
+                this.props.ActiveUser.setEmailVerification(user.user.emailVerified);
+                this.props.ActiveUser.setUid(user.user.uid);
+                window.location.assign('/');
+            } catch (error) {
+                console.log('error signing in: ', error);
+                this.setState({error: error.message});
+            }
         } catch (error) {
             console.log(error);
             this.setState({error: error.message});
@@ -75,12 +87,11 @@ class LoginModal extends React.Component {
         event.preventDefault();
         try {
             const user = await Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password);
-            console.log(user);
             this.props.ActiveUser.setAuthentication(true);
             this.props.ActiveUser.setUser(user.user.displayName);
             this.props.ActiveUser.setEmailVerification(user.user.emailVerified);
             this.props.ActiveUser.setUid(user.user.uid);
-            window.location.assign('/home');
+            window.location.assign('/');
         } catch (error) {
             console.log('error signing in: ', error);
             this.setState({error: error.message});
@@ -90,28 +101,28 @@ class LoginModal extends React.Component {
     renderSignUp() {
         return (
             <div>
-                <div className="border-bottom mb-2">
-                        <h3 className="mb-3">Sign Up</h3>
+                <div className="border-bottom mt-5 mb-2 padding">
+                        <h3 className="mt-5 mb-3">Sign Up</h3>
                 </div>
                 {this.state.error !== "" ? <p className="Error">Error signing up: {this.state.error}</p> : null}
-                <div className="row mb-3">
-                    <div className="col-md-12">
+                <div className="row align-items-center justify-content-center mb-3">
+                    <div className="col-md-10">
                         <label htmlFor="Fullname" className="form-label float-left ml-1 mt-1">Full Name</label>
                         <input type="text" className="form-control" placeholder='First and Last' name="Fullname" id="fullname" onChange={this.onInputChange} />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         <label htmlFor="Username" className="form-label float-left ml-1 mt-1">Username</label>
                         <input type="text" className="form-control" placeholder='No Spaces' name="Username" id="username" onChange={this.onInputChange} />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         <label htmlFor="Email" className="form-label float-left ml-1 mt-1">Email</label>
                         <input type="text" className="form-control" placeholder='example@email.com' name="Email" id="email" onChange={this.onInputChange} />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         <label htmlFor="Password" className="form-label float-left ml-1 mt-1">Password</label>
                         <input type="password" className="form-control" placeholder='8 Characters No Spaces' name="Password" id="password" onChange={this.onInputChange} />
                     </div>
-                    <div className="col-md-6 mb-2">
+                    <div className="col-md-5 mb-2">
                         <label htmlFor="Confirm-Password" className="form-label float-left ml-1 mt-1">Confirm Password</label>
                         <input type="password" className="form-control" placeholder='Re-enter Password' name="Confirm-Password" id="confirmpassword" onChange={this.onInputChange} />
                     </div>
@@ -127,8 +138,8 @@ class LoginModal extends React.Component {
     renderLogIn() {
         return (
             <div>
-                <div className="border-bottom mb-3">
-                        <h3>Welcome Back!</h3>
+                <div className="border-bottom mt-5 mb-3 padding">
+                        <h3 className="mt-5">Welcome Back!</h3>
                 </div>
                 {this.state.error !== "" ? <p className="Error">Error signing in: {this.state.error}</p> : null}
                 <div className="mb-1">
@@ -150,15 +161,17 @@ class LoginModal extends React.Component {
 
     renderInlineLogIn() {
         return (
-            <form className="form-inline mx-sm-9" action="/home" method="POST">
-                <div className="form-group mx-3 mb-3">
-                    <input type="text" className="form-control" placeholder='Email' name="Email" id="email" onChange={this.onInputChange} />
-                </div>
-                <div className="form-group mx-3 mb-3">
-                    <input type="password" className="form-control" placeholder='Password' name="Password" id="password" onChange={this.onInputChange} />
-                </div>
-                <div className="form-group mx-sm-3 mb-2">
-                    <button className="btn btn-outline-success mb-2" onClick={this.handleLogIn}>Log In</button>
+            <form className="form-inline mx-3" action="/" method="POST">
+                <div className="form-row align-items-center justify-content-center">
+                    <div className="col-md-auto mb-3">
+                        <input type="text" className="form-control" placeholder='Email' name="Email" id="email" onChange={this.onInputChange} />
+                    </div>
+                    <div className="col-md-auto mb-3">
+                        <input type="password" className="form-control" placeholder='Password' name="Password" id="password" onChange={this.onInputChange} />
+                    </div>
+                    <div className="col-auto mb-2">
+                        <button className="btn btn-outline-success mb-2" onClick={this.handleLogIn}>Log In</button>
+                    </div>
                 </div>
             </form>
         );
@@ -167,12 +180,12 @@ class LoginModal extends React.Component {
 
     render() {
         return (
-            <div className="container-fluid mt-4">
+            <div className="container mt-4">
                 { 
                 this.state.inline ? 
                 this.renderInlineLogIn() : 
                   (
-                    <form className="Login-form">
+                    <form>
                         {this.state.login ?  this.renderLogIn() : this.renderSignUp()}
                     </form>
                   )

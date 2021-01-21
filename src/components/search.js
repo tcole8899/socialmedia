@@ -25,7 +25,6 @@ class Search extends React.Component {
 
         userQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-            console.log(Object.keys(data));
             this.setState({
                 usernamesArr: Object.keys(data),
                 usernamesObj: data
@@ -37,7 +36,6 @@ class Search extends React.Component {
     onInputChange = event => {
         const usernamesArr = this.state.usernamesArr;
         let displayUsers = [];
-        console.log(event.target.value);
         if (event.target.value) {
             displayUsers = usernamesArr.filter(username => username.includes(event.target.value));
             this.setState({
@@ -58,8 +56,7 @@ class Search extends React.Component {
         const search = event.target.value;
         const userQuery = Firebase.database().ref('users/').orderByChild('username/').equalTo(search);
         userQuery.once('value', snapshot => {
-            let data = snapshot.val() ? snapshot.val() : {};
-            console.log(snapshot.val());
+            let data = snapshot.val() ? snapshot.val() : null;
             //let fullData = { ...data };
             this.setState({
                 display: data,
@@ -72,14 +69,12 @@ class Search extends React.Component {
 
     render() {
         var { display, profile, usernamesObj, displayUsers, searchUser, showUser} = this.state;
-        if (display !== null) {
-            console.log(display);
-        }
+
         return (
             <div className="Profile">
                 {searchUser && showUser ? <User uid={searchUser} profile={false} /> : null}
-                <div className="container mt-5">
-                    <form>
+                <div className="container padding">
+                    <form className="mb-3">
                         <input className="form-control" placeholder="Search by Username" onChange={this.onInputChange} />
                     </form>
                     <div className="Content-posts">
@@ -93,6 +88,7 @@ class Search extends React.Component {
                                         renderProfile={this.onSubmit}
                                         FollowUid={user}
                                         author={key}
+                                        date=","
                                     />
                                 }
                                 else {
@@ -100,28 +96,28 @@ class Search extends React.Component {
                                 }
                             })
                             : null}
-                        {profile ?
+                        { display !== null && profile ?
                             Object.keys(display).map((key, index) => {
                                 let user = display[key];
-                                console.log(user);
-                                return Object.keys(user.posts).map((keyP, indexP) => {
-                                    let post = user.posts[keyP];
-                                    console.log(post);
-                                    try {
-                                        return (<Post
-                                            key={keyP}
-                                            likes={post.likes}
-                                            FollowUid={post.authorId}
-                                            date={post.date.replace(/,/, " -")}
-                                            postKey={keyP}
-                                            post={true}
-                                            author={post.author}
-                                            text={post.text} />)
-                                    } catch (error) {
-                                        console.error(error);
-                                    }
-                                    return null;
-                                })
+                                if ('posts' in user){
+                                    return Object.keys(user.posts).map((keyP, indexP) => {
+                                        let post = user.posts[keyP];
+                                        try {
+                                            return (<Post
+                                                key={keyP}
+                                                likes={post.likes}
+                                                FollowUid={post.authorId}
+                                                date={post.date}
+                                                postKey={keyP}
+                                                post={true}
+                                                author={post.author}
+                                                text={post.text} />)
+                                        } catch (error) {
+                                            console.error(error);
+                                        }       
+                                    })
+                                }
+                                return <p>This user has no posts!</p>;
                             })
                             : null}
                     </div>

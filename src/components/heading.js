@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {AiOutlineHome, AiOutlineSearch, AiOutlineUser} from 'react-icons/ai';
 import Firebase from '../Config/Firebase';
 import LoginModal from './loginModal.js';
@@ -8,7 +9,6 @@ class Heading extends React.Component {
         event.preventDefault();
         try {
             const out = Firebase.auth().signOut();
-            console.log(out);
             this.props.ActiveUser.setAuthentication(false);
             this.props.ActiveUser.setUser(null);
             window.location.assign('/');
@@ -21,7 +21,7 @@ class Heading extends React.Component {
     render() {
         const user = this.props.ActiveUser.user;
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+            <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
                 <div className="container-fluid">
                     <div className="navbar-brand mt-2 d-none d-sm-block">
                         {
@@ -33,9 +33,9 @@ class Heading extends React.Component {
                     {
                         this.props.ActiveUser.Authenticated && user ?
                             <div className="btn-group">
-                                <a href="/home" className="btn btn-outline-secondary"><AiOutlineHome /></a>
-                                <a href='/search' className="btn btn-outline-secondary"><AiOutlineSearch /></a>
-                                <a href='/profile' className="btn btn-outline-secondary"><AiOutlineUser /></a>
+                                <Link to="/" className="btn btn-outline-secondary"><AiOutlineHome /></Link>
+                                <Link to='/search' className="btn btn-outline-secondary"><AiOutlineSearch /></Link>
+                                <Link to='/profile' className="btn btn-outline-secondary"><AiOutlineUser /></Link>
                             </div>
                             : null
                     }

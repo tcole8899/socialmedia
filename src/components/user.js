@@ -1,6 +1,19 @@
 import React from 'react';
 import Firebase from '../Config/Firebase.js';
 
+function ProfileBadge(word, list = null) {
+    var number = 0;
+    if (list != null) {
+        number = Object.keys(list).length;
+    }
+    return(
+        <div className="list-group-item d-flex justify-content-between align-items-center">
+            <p>{word}</p> 
+            <span class="badge badge-primary badge-pill">{number}</span>
+        </div>
+    );
+}
+
 class User extends React.Component {
     constructor(props) {
         super(props);
@@ -13,13 +26,10 @@ class User extends React.Component {
     componentDidMount() {
         var UID = this.props.uid;
         var profile = this.props.profile ? this.props.profile : false;
-        console.log(UID);
         var userQuery = Firebase.database().ref('users/' + UID);
 
         userQuery.once('value', snapshot => {
             let data = snapshot.val() ? snapshot.val() : {};
-            console.log(data);
-            console.log("inside userQuery");
             this.setState({ userData: data });
         })
 
@@ -32,22 +42,18 @@ class User extends React.Component {
 
     render() {
         const {userData, profile} = this.state;
-        console.log(userData);
         
         return (
             <div className="bg-light border">
                 {(userData && profile) ?
-                    <div className="col  mt-2">
-                        <div className="row-12 User mb-2"></div>
-                        <div className="row-12">
-                            <p>@{userData.username}</p>
+                    <div className="list-group  mt-2">
+                        <div className="row-12 User mb-2">
                         </div>
-                        <div className="row-12">
-                            <p>{userData.fullname}</p>
+                        <div className="list-group-item d-flex justify-content-between align-items-center">
+                            {userData.fullname} <span className="text-muted">(@{userData.username})</span>
                         </div>
-                        <div className="row-12">
-                            { userData.following !== null ? <p>{Object.keys(userData.following).length} Following</p> : null}
-                        </div>
+                        { ProfileBadge("Following", userData.following) }
+                        { ProfileBadge("Followers", userData.followers) }
                     </div>
                     :
                     null
