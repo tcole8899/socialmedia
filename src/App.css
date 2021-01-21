@@ -3,14 +3,63 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 25vh;
+  background-color: #ffffff;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  width: stretch;
   font-size: calc(10px + 2vmin);
   color: white;
+  border-bottom: 1px solid white;
+  position: fixed;
+}
+
+.App-header > .Title {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+}
+
+.App-header > .Navigation {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+  margin-left: auto;
+}
+
+.App-header > .AuthNav {
+  display: flex;
+  align-items: stretch;
+  padding: 10px;
+  margin: 0 auto;
+}
+
+.AuthNav > .Nav-button{
+  background-color: transparent;
+  color: black;
+  padding: 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 20px;
+  max-height: 30px;
+  margin: auto;
+}
+
+.padding{
+  padding-top: 100px;
+}
+
+.Nav-button{
+  background-color: gray;
+  color: black;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  max-height: 30px;
+  margin: auto;
+}
+
+.Nav-button:hover {
+  background-color: rgb(234, 234, 234);
 }
 
 .App-content{
@@ -77,4 +126,173 @@
 .Form-Submit:hover{
   cursor: pointer;
   background-color: rgb(105, 187, 101);
+}
+
+.Error {
+  color: red;
+}
+
+.Content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 85vh;
+  max-height: stretch;
+  background-color: white;
+  margin: auto;
+  padding-top: 110px;
+  padding-bottom: 10px;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.Content-input {
+  display: flex;
+  width: stretch;
+  float: right;
+  margin-left: auto;
+}
+
+.Content-posts {
+  height: stretch;
+  width: stretch;
+  overflow: hidden;
+  float: right;
+  margin-left: auto;
+}
+
+.Post-input {
+  width: stretch;
+  min-height: 20px;
+  resize: none;
+}
+
+.Profile {
+  background-color: white;
+  display: block;
+}
+
+.UserInfo {
+  position: fixed;
+  float: left;
+  width: fit-content;
+  padding-top: 10%;
+  padding-left: 50px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.User {
+  background-image: url('./components/generic_profile_pic.png');
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+  background-repeat: no-repeat;
+  background-size: 100px;
+  margin: 0 auto;
+}
+
+.Content > button {
+  height: 25px;
+}
+
+.Content > table {
+  width: stretch;
+}
+
+.Post {
+  background-color: white;
+  width: stretch;
+  height: fit-content;
+  display: block;
+  border: 3px solid #282c34;
+  overflow: hidden;
+}
+
+.Post-author {
+  width: stretch;
+  height: 40px;
+  float: left;
+  display: flex;
+  padding-left: 10px;
+  align-items: center;
+}
+
+.Post-text {
+  height: fit-content;
+  width: stretch;
+  text-align: left;
+  padding-left: 5%;
+}
+
+.Post-info {
+  height: 40px;
+  width: stretch;
+  display: flex;
+  align-items: center;
+}
+
+.Post-like > button {
+  height: fit-content;
+  align-self: center;
+  background: transparent;
+  border: transparent;
+  font-size: 15px;
+  padding-top: 8px;
+}
+
+.Post-like > button:hover {
+  color: rgb(47, 90, 246);
+  cursor: pointer;
+}
+
+.Post-like > button:focus {
+  outline: none;
+}
+
+
+.Post-like {
+  padding-left: 10px;
+  width: fit-content;
+  display: flex;
+}
+
+.Post-comment {
+  float: left;
+  padding-top: 5px;
+  margin-right: auto;
+}
+
+.Post-comment > button{
+  float: left;
+  margin: auto;
+  background-color: transparent;
+  border: none;
+}
+
+.Post-comment > button:hover {
+  color: rgb(47, 90, 246);
+  cursor: pointer;
+}
+
+.Post-commment > button:focus {
+  outline: none;
+}
+
+
+
+.Post-date {
+  padding-right: 10px;
+  float: right;
+  align-self: right;
+  margin-left: auto;
+}
+
+.Search {
+  background-color: white;
+  width: stretch;
+  height: 20px;
+  resize: none;
 }
